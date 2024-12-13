@@ -1,4 +1,7 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -17,8 +20,38 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getSession } from "@/lib/GetSession";
 
 const DashboardPage = () => {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const session = await getSession();
+        console.log("Session:", session);
+        if (!session?.user) {
+          router.push("/login");
+        } else {
+          setIsLoading(false);
+        }
+      } catch (err) {
+        console.error("Error checking session:", err);
+        router.push("/login");
+      }
+    };
+
+    checkSession();
+  }, [router]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
+        <div className="text-lg font-medium">Loading...</div>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-8">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
