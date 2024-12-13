@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 Fully Functional Login Page with MongoDB and NextAuth
 
-## Getting Started
+Welcome to the repository! This project showcases a **fully functional login page** built using **MongoDB** and **NextAuth**. It enables users to sign in using their **GitHub** or **Google** accounts, offering a smooth and secure authentication experience.
 
-First, run the development server:
+## 🛠 Features
+
+- **GitHub Authentication**: Sign in using your GitHub account 🧑‍💻.
+- **Google Authentication**: Sign in using your Google account 📧.
+- **MongoDB Integration**: User data is stored securely in MongoDB for persistence 💾.
+- **NextAuth**: Leverages NextAuth.js for secure and customizable authentication flows 🔐.
+- **Responsive Design**: Optimized login page for various screen sizes 📱💻.
+
+## 🔧 Technologies Used
+
+- **Next.js**: A React framework for building static and dynamic websites ⚛️.
+- **MongoDB**: A NoSQL database to store user data 💾.
+- **NextAuth**: A complete authentication solution for Next.js applications 🔑.
+- **GitHub API**: Used for GitHub authentication 🐙.
+- **Google OAuth**: Used for Google authentication 🔒.
+
+## 🔑 Environment Variables
+
+To run this project locally, you'll need to set up the following environment variables. Create a `.env.local` file in the root of the project and add the details below:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+MONGO_URI="your_mongo_connection_string"
+AUTH_SECRET="your_secret_key"
+
+GITHUB_CLIENT_SECRET="your_github_client_secret"
+GITHUB_CLIENT_ID="your_github_client_id"
+
+GOOGLE_CLIENT_ID="your_google_client_id"
+GOOGLE_CLIENT_SECRET="your_google_client_secret"
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ⚡ Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Clone the repository**:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   ```bash
+   git clone https://github.com/alok-mishra143/Next-auth.git
+   ```
 
-## Learn More
+2. **Install the required dependencies**:
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   cd Next-auth
+   npm install
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. **Create a `.env.local` file** in the root of the project and add the environment variables as mentioned above.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+4. **Run the project locally**:
 
-## Deploy on Vercel
+   ```bash
+   npm run dev
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+5. Open your browser and navigate to [http://localhost:3000](http://localhost:3000) to view the login page 🎉.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📁 GitHub Link
+
+Check out the GitHub repository for the full code:
+[Next-auth GitHub Repository](https://github.com/alok-mishra143/Next-auth.git)
