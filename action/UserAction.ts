@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import connectDB from "@/lib/db";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
@@ -55,4 +55,21 @@ export const RegisterUser = async ({
 
   await User.create({ fullName: Name, email, password: newPassword });
   return { status: "success", message: "User registered successfully" };
+};
+
+export const getAllUsers = async () => {
+  await connectDB();
+  const users = await User.find({});
+  return JSON.stringify(users);
+};
+
+export const deleteUserById = async (id: string) => {
+  await connectDB();
+  await User.findByIdAndDelete(id);
+  return { status: "success", message: "User deleted successfully" };
+};
+
+export const handlesignOut = async () => {
+  await signOut();
+  redirect("/");
 };

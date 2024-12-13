@@ -1,75 +1,105 @@
-// users.json (sample data)
-
 "use client";
-export const users = [
-  { id: 1, name: "John Doe", email: "john@example.com" },
-  { id: 2, name: "Jane Smith", email: "jane@example.com" },
-  { id: 3, name: "Emily Johnson", email: "emily@example.com" },
-];
 
-// page.jsx
-import React, { useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { getSession } from "@/lib/GetSession";
+import { deleteUserById, getAllUsers } from "@/action/UserAction";
+
+interface GetUserProps {
+  _id: string;
+  fullName: string;
+  email: string;
+  __v: number;
+}
 
 const Page = () => {
-  const [userList, setUserList] = useState(users);
+  const [loading, setLoading] = useState(true);
+  const [userList, setUserList] = useState<GetUserProps[]>([]);
 
-  const handleDelete = (id: number) => {
-    const updatedUsers = userList.filter((user) => user.id !== id);
-    setUserList(updatedUsers);
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkSession = async (): Promise<void> => {
+      try {
+        const session = await getSession();
+
+        if (session?.user && session.user.role === "admin") {
+          const users = await getAllUsers();
+
+          setUserList(JSON.parse(users));
+          setLoading(false);
+        } else {
+          router.push("/private/dashboard");
+        }
+      } catch (err) {
+        console.error("Error checking session:", err);
+      }
+    };
+
+    checkSession();
+  }, [router]);
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteUserById(id);
+      setUserList((prevUserList) =>
+        prevUserList.filter((user) => user._id !== id)
+      );
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
   };
 
-  return (
-    <div className="min-h-screen bg-gray-900 text-gray-200 p-6 flex flex-col items-center  ">
-      <h1 className="text-3xl font-bold mb-6 text-center text-gray-100">
-        User Management
-      </h1>
-      <div className="flex items-center justify-center max-w-5">
-        <Table className="w-full max-w-4xl bg-gray-800 rounded-lg shadow-md">
-          <TableCaption className="text-gray-400">
-            Manage your users effectively
-          </TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="text-left text-gray-300">ID</TableHead>
-              <TableHead className="text-left text-gray-300">Name</TableHead>
-              <TableHead className="text-left text-gray-300">Email</TableHead>
-              <TableHead className="text-left text-gray-300">Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {userList.map((user) => (
-              <TableRow key={user.id} className="hover:bg-gray-700">
-                <TableCell className="py-2 px-4 border-b border-gray-700">
-                  {user.id}
-                </TableCell>
-                <TableCell className="py-2 px-4 border-b border-gray-700">
-                  {user.name}
-                </TableCell>
-                <TableCell className="py-2 px-4 border-b border-gray-700">
-                  {user.email}
-                </TableCell>
-                <TableCell className="py-2 px-4 border-b border-gray-700">
-                  <button
-                    className="px-3 py-1 text-sm font-semibold text-white bg-red-600 rounded shadow hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400"
-                    onClick={() => handleDelete(user.id)}
-                  >
-                    Delete
-                  </button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
+        <p>Loading...</p>
       </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-900 text-white p-8">
+      <h1 className="text-2xl font-bold mb-4">User Management</h1>
+      {userList.length > 0 ? (
+        <div className="overflow-x-auto">
+          <table className="table-auto w-full border-collapse border border-gray-700">
+            <thead>
+              <tr className="bg-gray-800">
+                <th className="border border-gray-700 px-4 py-2">#</th>
+                <th className="border border-gray-700 px-4 py-2">Full Name</th>
+                <th className="border border-gray-700 px-4 py-2">Email</th>
+                <th className="border border-gray-700 px-4 py-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {userList.map((user, index) => (
+                <tr key={user._id} className="even:bg-gray-800 odd:bg-gray-700">
+                  <td className="border border-gray-700 px-4 py-2 text-center">
+                    {index + 1}
+                  </td>
+                  <td className="border border-gray-700 px-4 py-2">
+                    {user.fullName}
+                  </td>
+                  <td className="border border-gray-700 px-4 py-2">
+                    {user.email}
+                  </td>
+                  <td className="border border-gray-700 px-4 py-2 text-center">
+                    <button
+                      onClick={() => handleDelete(user._id)}
+                      className="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-3 rounded"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p className="text-center">No users found</p>
+      )}
     </div>
   );
 };

@@ -30,7 +30,7 @@ const DashboardPage = () => {
     const checkSession = async () => {
       try {
         const session = await getSession();
-        console.log("Session:", session);
+
         if (!session?.user) {
           router.push("/login");
         } else {

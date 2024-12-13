@@ -25,7 +25,7 @@ const RegisterPage = () => {
       try {
         const session = await getSession();
         if (session?.user) {
-          router.replace("/");
+          router.replace("/login");
         }
       } catch (err) {
         console.error("Session check failed:", err);
